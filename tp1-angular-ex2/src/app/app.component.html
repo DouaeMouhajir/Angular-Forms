@@ -1,0 +1,102 @@
+<div class="container">
+  <mat-card class="form-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Inscription - Reactive Forms</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="inscriptionForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Champ Nom complet -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nom Complet</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="fullname"
+          />
+          @if (inscriptionForm.get('fullname')?.invalid && inscriptionForm.get('fullname')?.touched) {
+            @if (inscriptionForm.get('fullname')?.hasError('required')) {
+              <mat-error>Le nom complet est obligatoire.</mat-error>
+            }
+            @if (inscriptionForm.get('fullname')?.hasError('minlength')) {
+              <mat-error>Le nom doit contenir au moins 3 caractères.</mat-error>
+            }
+          }
+        </mat-form-field>
+
+        <!-- Champ Âge -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Age</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="age"
+          />
+          @if (inscriptionForm.get('age')?.invalid && inscriptionForm.get('age')?.touched) {
+            @if (inscriptionForm.get('age')?.hasError('required')) {
+              <mat-error>L'âge est obligatoire.</mat-error>
+            }
+            @if (inscriptionForm.get('age')?.hasError('min')) {
+              <mat-error>Vous devez avoir au moins 18 ans.</mat-error>
+            }
+          }
+        </mat-form-field>
+
+        <!-- Champ Pays -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Pays</mat-label>
+          <mat-select formControlName="country">
+            @for (pays of paysList; track pays.value) {
+              <mat-option [value]="pays.value">{{ pays.label }}</mat-option>
+            }
+          </mat-select>
+          @if (inscriptionForm.get('country')?.invalid && inscriptionForm.get('country')?.touched) {
+            @if (inscriptionForm.get('country')?.hasError('required')) {
+              <mat-error>Veuillez sélectionner un pays.</mat-error>
+            }
+          }
+        </mat-form-field>
+
+        <!-- Champ Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+          />
+          @if (inscriptionForm.get('email')?.invalid && inscriptionForm.get('email')?.touched) {
+            @if (inscriptionForm.get('email')?.hasError('required')) {
+              <mat-error>L'email est obligatoire.</mat-error>
+            }
+            @if (inscriptionForm.get('email')?.hasError('email')) {
+              <mat-error>Veuillez saisir une adresse email valide.</mat-error>
+            }
+          }
+        </mat-form-field>
+
+        <!-- Bouton de soumission -->
+        <div class="button-container">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="inscriptionForm.invalid"
+            class="submit-btn"
+          >
+            S'inscrire
+          </button>
+        </div>
+      </form>
+
+      <!-- Récapitulatif après soumission valide -->
+      @if (submittedData) {
+        <div class="recap-box">
+          <h3>Inscription réussie !</h3>
+          <pre>{{ submittedData | json }}</pre>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
